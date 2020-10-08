@@ -157,6 +157,26 @@ func TestValidateCustomResource(t *testing.T) {
 				{object: map[string]interface{}{"field": nil}, expectErrs: []string{`field: Invalid value: "null": field in body must be of type object: "null"`}},
 			},
 		},
+		{name: "!nullable array",
+			schema: apiextensions.JSONSchemaProps{
+				Properties: map[string]apiextensions.JSONSchemaProps{
+					"field": {
+						Items: &apiextensions.JSONSchemaPropsOrArray{
+							Schema: &apiextensions.JSONSchemaProps{
+								Type:   "string",
+								Format: "string",
+							},
+						},
+						Type: "array",
+					},
+				},
+			},
+			objects: []interface{}{
+				map[string]interface{}{},
+				map[string]interface{}{"field": nil},
+				map[string]interface{}{"field": []interface{}{}},
+			},
+		},
 		{name: "nullable",
 			schema: apiextensions.JSONSchemaProps{
 				Properties: map[string]apiextensions.JSONSchemaProps{
